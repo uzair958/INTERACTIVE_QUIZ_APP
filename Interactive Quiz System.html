@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games & Quizzes - Mnemonics Quiz</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .header {
+            background-color: #0f2949;
+            color: white;
+            padding: 10px 0;
+        }
+        
+        .header img {
+            height: 24px;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .quiz-welcome {
+            background-image: url('https://via.placeholder.com/800x400/ffff00/000000');
+            background-size: cover;
+            padding: 30px 0;
+            position: relative;
+        }
+        
+        .sticky-notes-bg {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .btn-start {
+            background-color: #ffb700;
+            border: none;
+            padding: 8px 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .quiz-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .quiz-body {
+            padding: 30px 15px;
+        }
+        
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .answer-option {
+            border: 1px solid #0f2949;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .answer-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .btn-next {
+            background-color: #0f2949;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            margin-top: 15px;
+        }
+        
+        .hint-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            background-color: #0f2949;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .social-icons i {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .score-container {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid #0f2949;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+        }
+        
+        .score-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0f2949;
+        }
+        
+        .score-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .result-message {
+            display: inline-block;
+            background-color: #0f2949;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #0f2949;
+            font-weight: bold;
+        }
+        
+        .nav-tabs .nav-link.active {
+            border-bottom: 3px solid #0f2949;
+        }
+        
+        .selected {
+            background-color: #e6f2ff;
+            border: 2px solid #0f2949;
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .btn-play-again {
+            background-color: #0f2949;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            margin-top: 15px;
+        }
+
+        .history-signup {
+            background-color: #0f2949;
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+
+        .subscribe-form {
+            display: flex;
+            max-width: 500px;
+            margin: 15px auto;
+        }
+
+        .subscribe-form input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+        }
+
+        .subscribe-form button {
+            background-color: #ffb700;
+            border: none;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+
+        #quizSection, #resultsSection {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <img src="https://via.placeholder.com/24" alt="Logo">
+                <span class="ms-2">Games & Quizzes</span>
+            </div>
+        </div>
+    </header>
+
+
+    <main>
+        <section id="welcomeSection" class="quiz-welcome">
+            <div class="container">
+                <div class="sticky-notes-bg">
+                    <h2>Can You Remember These Mnemonics? Quiz</h2>
+                    <button id="startBtn" class="btn btn-start">Start</button>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <i class="fas fa-question-circle"></i> 14 Questions
+                        </div>
+                        <div>
+                            <i class="far fa-clock"></i> 3 mins
+                            <label class="ms-2">
+                                <input type="checkbox" class="form-check-input"> Timer
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quizSection" class="quiz-container">
+            <div class="quiz-info">
+                <div>
+                    <span id="currentQuestion">0</span> of <span id="totalQuestions">14</span>
+                </div>
+                <div>
+                    Score: <span id="currentScore">0</span>
+                </div>
+            </div>
+            <div class="quiz-body">
+                <h3 id="questionTitle" class="question-title">ROY G. BIV</h3>
+                <div id="answerOptions">
+                    <div class="answer-option" data-correct="true">
+                        colors of the rainbow
+                    </div>
+                    <div class="answer-option">
+                        organ systems of the human body
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button id="nextBtn" class="btn btn-next">Next →</button>
+                </div>
+                <p class="hint-text">
+                    <i class="fas fa-lightbulb"></i> Starting from the outside and working inward, a rainbow's colors are traditionally broken up into red, orange, yellow, green, blue, indigo, and violet.
+                </p>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="quiz-container">
+            <ul class="nav nav-tabs" id="resultTabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#scoreTab">Score</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#answersTab">Answers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#leaderboardTab">Leaderboard</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="scoreTab">
+                    <div class="score-container">
+                        <div class="result-message">Congrats!</div>
+                        <div class="score-circle">
+                            <div class="score-text"><span id="finalScore">3</span>/<span id="totalQuestionsResult">14</span></div>
+                            <div class="score-label">Good score</div>
+                        </div>
+                        <button id="playAgainBtn" class="btn btn-play-again">Play Again</button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="answersTab">
+                    <div class="p-3">
+                        <p>Your answers and correct answers will be displayed here.</p>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="leaderboardTab">
+                    <div class="p-3">
+                        <p>Leaderboard will be displayed here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-signup">
+            <div class="container text-center">
+                <h4>History at your fingertips</h4>
+                <p>Sign up here to see what happened On This Day, every day in your inbox!</p>
+                <form class="subscribe-form">
+                    <input type="email" placeholder="Email address" class="form-control">
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+                <p class="small mt-2">By signing up for this email, you are agreeing to news, offers, and information from Encyclopedia Britannica.<br>Click here to view our Privacy Notice. Easy unsubscribe links are provided in every email.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row pb-3 text-center">
+                <div class="col social-icons">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <a href="#" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Use</a>
+                    <a href="#" class="footer-link">Diversity</a>
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col">
+                    <small>©2025 Encyclopedia Britannica, Inc.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Quiz questions data
+        const quizQuestions = [
+    {
+        question: "What is the result of 8 + 7?",
+        options: [
+            "14",
+            "15",
+            "16",
+            "17"
+        ],
+        correctAnswer: 1,
+        hint: "Addition of single-digit numbers."
+    },
+    {
+        question: "What is 12 × 5?",
+        options: [
+            "55",
+            "60",
+            "65",
+            "70"
+        ],
+        correctAnswer: 1,
+        hint: "Multiplication of a two-digit number by a single-digit number."
+    },
+    {
+        question: "What is 144 ÷ 12?",
+        options: [
+            "10",
+            "12",
+            "14",
+            "16"
+        ],
+        correctAnswer: 1,
+        hint: "Division of a three-digit number by a two-digit number."
+    },
+    {
+        question: "What is 9²?",
+        options: [
+            "72",
+            "81",
+            "90",
+            "99"
+        ],
+        correctAnswer: 1,
+        hint: "Square of a single-digit number."
+    },
+    {
+        question: "What is the value of x in the equation 2x + 5 = 15?",
+        options: [
+            "5",
+            "7",
+            "10",
+            "20"
+        ],
+        correctAnswer: 0,
+        hint: "Solve for x by isolating it on one side of the equation."
+    },
+    {
+        question: "What is the square root of 100?",
+        options: [
+            "5",
+            "10",
+            "25",
+            "50"
+        ],
+        correctAnswer: 1,
+        hint: "Which number, when multiplied by itself, equals 100?"
+    },
+    {
+        question: "If y = 3x + 2 and x = 4, what is y?",
+        options: [
+            "10",
+            "12",
+            "14",
+            "16"
+        ],
+        correctAnswer: 2,
+        hint: "Substitute the value of x into the equation and solve for y."
+    },
+    {
+        question: "What is 25% of 80?",
+        options: [
+            "15",
+            "20",
+            "25",
+            "30"
+        ],
+        correctAnswer: 1,
+        hint: "Convert the percentage to a decimal and multiply."
+    },
+    {
+        question: "What is the perimeter of a rectangle with length 8 cm and width 5 cm?",
+        options: [
+            "13 cm",
+            "26 cm",
+            "40 cm",
+            "65 cm"
+        ],
+        correctAnswer: 1,
+        hint: "The perimeter is the sum of all sides."
+    },
+    {
+        question: "If a = 3 and b = 4, what is a² + b²?",
+        options: [
+            "7",
+            "12",
+            "25",
+            "49"
+        ],
+        correctAnswer: 2,
+        hint: "Square each number and add the results."
+    },
+    {
+        question: "What is the value of 2³?",
+        options: [
+            "6",
+            "8",
+            "16",
+            "64"
+        ],
+        correctAnswer: 1,
+        hint: "Multiply 2 by itself 3 times."
+    },
+    {
+        question: "What is 1/4 + 1/2?",
+        options: [
+            "2/6",
+            "3/4",
+            "5/6",
+            "1"
+        ],
+        correctAnswer: 1,
+        hint: "Convert to a common denominator before adding."
+    },
+    {
+        question: "Simplify: 3(x + 2) - 5",
+        options: [
+            "3x + 1",
+            "3x + 6 - 5",
+            "3x + 6",
+            "3x - 5"
+        ],
+        correctAnswer: 0,
+        hint: "Distribute the 3 and then combine like terms."
+    },
+    {
+        question: "What is the area of a circle with radius 5 cm? (Use π = 3.14)",
+        options: [
+            "31.4 cm²",
+            "78.5 cm²",
+            "15.7 cm²",
+            "314 cm²"
+        ],
+        correctAnswer: 1,
+        hint: "Use the formula A = πr²."
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedOption = null;
+let questionsAnswered = [];
+
+const welcomeSection = document.getElementById('welcomeSection');
+const quizSection = document.getElementById('quizSection');
+const resultsSection = document.getElementById('resultsSection');
+const startBtn = document.getElementById('startBtn');
+const questionTitle = document.getElementById('questionTitle');
+const answerOptions = document.getElementById('answerOptions');
+const currentQuestionDisplay = document.getElementById('currentQuestion');
+const totalQuestionsDisplay = document.getElementById('totalQuestions');
+const currentScoreDisplay = document.getElementById('currentScore');
+const nextBtn = document.getElementById('nextBtn');
+const hintText = document.querySelector('.hint-text');
+const finalScoreDisplay = document.getElementById('finalScore');
+const totalQuestionsResultDisplay = document.getElementById('totalQuestionsResult');
+const playAgainBtn = document.getElementById('playAgainBtn');
+
+
+startBtn.addEventListener('click', startQuiz);
+nextBtn.addEventListener('click', handleNextQuestion);
+playAgainBtn.addEventListener('click', resetQuiz);
+
+function init() {
+    totalQuestionsDisplay.textContent = quizQuestions.length;
+    totalQuestionsResultDisplay.textContent = quizQuestions.length;
+}
+
+function startQuiz() {
+    welcomeSection.style.display = 'none';
+    quizSection.style.display = 'block';
+    resultsSection.style.display = 'none';
+    
+    // Reset quiz state
+    currentQuestionIndex = 0;
+    score = 0;
+    questionsAnswered = [];
+    
+    loadQuestion();
+}
+
+
+function loadQuestion() {
+    if (currentQuestionIndex >= quizQuestions.length) {
+        showResults();
+        return;
+    }
+    
+    const question = quizQuestions[currentQuestionIndex];
+    
+    // Update question display
+    questionTitle.textContent = question.question;
+    currentQuestionDisplay.textContent = currentQuestionIndex + 1;
+    currentScoreDisplay.textContent = score;
+    
+    selectedOption = null;
+    
+    answerOptions.innerHTML = '';
+    
+    question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'answer-option';
+        optionElement.textContent = option;
+        optionElement.dataset.index = index;
+        
+        optionElement.addEventListener('click', () => selectOption(optionElement, index));
+        
+        answerOptions.appendChild(optionElement);
+    });
+    
+    hintText.innerHTML = `<i class="fas fa-lightbulb"></i> ${question.hint}`;
+    
+    nextBtn.disabled = true;
+}
+
+function selectOption(optionElement, index) {
+    
+    const options = answerOptions.querySelectorAll('.answer-option');
+    options.forEach(opt => {
+        opt.classList.remove('selected');
+        opt.classList.remove('correct');
+        opt.classList.remove('incorrect');
+    });
+    
+    // Marking selected option
+    optionElement.classList.add('selected');
+    
+    // Storing selected option
+    selectedOption = index;
+    
+    nextBtn.disabled = false;
+}
+
+
+function handleNextQuestion() {
+    if (selectedOption === null) return;
+    
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const isCorrect = selectedOption === currentQuestion.correctAnswer;
+    
+
+    questionsAnswered.push({
+        question: currentQuestion.question,
+        userAnswer: currentQuestion.options[selectedOption],
+        correctAnswer: currentQuestion.options[currentQuestion.correctAnswer],
+        isCorrect: isCorrect
+    });
+    
+    if (isCorrect) {
+        score++;
+        currentScoreDisplay.textContent = score;
+    }
+    
+    const options = answerOptions.querySelectorAll('.answer-option');
+    
+    options[selectedOption].classList.add(isCorrect ? 'correct' : 'incorrect');
+    if (!isCorrect) {
+        options[currentQuestion.correctAnswer].classList.add('correct');
+    }
+    
+    setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion();
+    }, 1000);
+}
+
+function showResults() {
+    quizSection.style.display = 'none';
+    resultsSection.style.display = 'block';
+    
+    finalScoreDisplay.textContent = score;
+    
+    const answersTab = document.getElementById('answersTab');
+    answersTab.innerHTML = '<div class="p-3">';
+    
+    questionsAnswered.forEach((item, index) => {
+        const answerHtml = `
+            <div class="mb-3">
+                <h5>${index + 1}. ${item.question}</h5>
+                <p>Your answer: <span class="${item.isCorrect ? 'text-success' : 'text-danger'}">${item.userAnswer}</span></p>
+                ${!item.isCorrect ? `<p>Correct answer: <span class="text-success">${item.correctAnswer}</span></p>` : ''}
+            </div>
+        `;
+        answersTab.innerHTML += answerHtml;
+    });
+    
+    answersTab.innerHTML += '</div>';
+}
+
+function resetQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    selectedOption = null;
+    questionsAnswered = [];
+    
+    startQuiz();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
